@@ -2,6 +2,7 @@ package lib.ui.ios;
 
 import io.appium.java_client.AppiumDriver;
 import lib.ui.ArticlePageObject;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 public class IosArticlePageObject extends ArticlePageObject {
     static {
@@ -14,7 +15,7 @@ public class IosArticlePageObject extends ArticlePageObject {
         LIST_ITEM_TITLE_TPL = "xpath://*[@text='Articles']";
     }
 
-    public IosArticlePageObject(AppiumDriver driver){
+    public IosArticlePageObject(RemoteWebDriver driver){
         super(driver);
     }
 }

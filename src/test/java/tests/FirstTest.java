@@ -1,6 +1,7 @@
 package tests;
 
 import lib.Platform;
+import lib.ui.*;
 import lib.ui.factories.ArticlePageObjectFactory;
 import lib.ui.factories.MyListsPageObjectFactory;
 import lib.ui.factories.NavigationUIFactory;
@@ -14,15 +15,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lib.CoreTestCase;
-import lib.ui.ArticlePageObject;
-import lib.ui.MainPageObject;
-import lib.ui.MyListsPageObject;
-import lib.ui.NavigationUI;
-import lib.ui.SearchPageObject;
 
 public class FirstTest extends CoreTestCase {
 
     private MainPageObject mainPageObject;
+    private static final String
+            login = "Daria.shine",
+            password = "44162853";
 
     protected void setUp() throws Exception{
         super.setUp();
@@ -159,12 +158,25 @@ public class FirstTest extends CoreTestCase {
             articlePageObject.closeArticle();
             navigationUI.clickMyLists();
             myListsPageObject.openFolderByName(name_of_folder);
-        }else {
+        }else if(Platform.getInstance().isIOS()){
             articlePageObject.addArticlesToMySaved();
             articlePageObject.closeArticle();
             searchPageObject.clickCancelSearch();
             navigationUI.clickMyLists();
             myListsPageObject.cloceOverflowSyncMenu();
+        }else{
+            AuthorizationPageObject auth = new AuthorizationPageObject(driver);
+            auth.clickAuthButton();
+            auth.enterLoginDate(login, password);
+            auth.submitForm();
+
+            articlePageObject.waitForTitleElement();
+            assertEquals("We are not on the same page after login",
+                    article_title, articlePageObject.getArticleTitle());
+            articlePageObject.addArticlesToMySaved();
+            navigationUI.openNavigation();
+            navigationUI.clickMyLists();
+
         }
         myListsPageObject.swipeByArticleToDelete(article_title);
     }
@@ -193,6 +205,8 @@ public class FirstTest extends CoreTestCase {
     }
     @Test
     public void testChangeScreenOrientationOnSearchResults(){
+        if(Platform.getInstance().isMW()) return;
+
         SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
         ArticlePageObject articlePageObject = ArticlePageObjectFactory.get(driver);
 
@@ -219,6 +233,8 @@ public class FirstTest extends CoreTestCase {
 
     @Test
     public void testCheckScreenArticleBackground(){
+        if(Platform.getInstance().isMW()) return;
+
         SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
 
         searchPageObject.initSearchInput();
@@ -243,7 +259,22 @@ public class FirstTest extends CoreTestCase {
         String article_title = articlePageObject.getArticleTitle();
 
         String name_of_folder = "Articles";
-        articlePageObject.addArticleToMyList(name_of_folder);
+        if(Platform.getInstance().isAndroid()) {
+            articlePageObject.addArticleToMyList(name_of_folder);
+        }else{
+            articlePageObject.addArticlesToMySaved();
+        }
+        if(Platform.getInstance().isMW()){
+            AuthorizationPageObject auth = new AuthorizationPageObject(driver);
+            auth.clickAuthButton();
+            auth.enterLoginDate(login, password);
+            auth.submitForm();
+
+            articlePageObject.waitForTitleElement();
+            assertEquals("We are not on the same page after login",
+                    article_title, articlePageObject.getArticleTitle());
+            articlePageObject.addArticlesToMySaved();
+        }
         articlePageObject.closeArticle();
 
         String name_article = "Romeo and Juliet";
