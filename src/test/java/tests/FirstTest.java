@@ -308,12 +308,21 @@ public class FirstTest extends CoreTestCase {
 
     @Test
     public void testAssertElementPresentEX9() {
+        String search_string = "Java";
         SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
         searchPageObject.initSearchInput();
-        searchPageObject.typeSearchLine("Java");
-        searchPageObject.waitForElementByTitleAndDescription("Java","Island in Southeast Asia");
-        searchPageObject.waitForElementByTitleAndDescription("JavaScript","High-level programming language");
-        searchPageObject.waitForElementByTitleAndDescription("Java (programming language)","Object-oriented programming language");
-        searchPageObject.waitForElementByTitleAndDescription("123","Object-oriented programming language");
+        searchPageObject.typeSearchLine(search_string);
+        if(Platform.getInstance().isMW()){
+            searchPageObject.waitForElementByTitleAndDescription(search_string,"Java","Island in Southeast Asia");
+            searchPageObject.waitForElementByTitleAndDescription(search_string,"JavaScript","High-level programming language");
+            searchPageObject.waitForElementByTitleAndDescription(search_string,"Java (programming language)","Object-oriented programming language");
+            searchPageObject.waitForElementByTitleAndDescription(search_string,"123","Object-oriented programming language");
+
+        }else {
+            searchPageObject.waitForElementByTitleAndDescription("Java", "Island in Southeast Asia");
+            searchPageObject.waitForElementByTitleAndDescription("JavaScript", "High-level programming language");
+            searchPageObject.waitForElementByTitleAndDescription("Java (programming language)", "Object-oriented programming language");
+            searchPageObject.waitForElementByTitleAndDescription("123", "Object-oriented programming language");
+        }
     }
 }

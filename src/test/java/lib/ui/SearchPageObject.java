@@ -1,6 +1,8 @@
 package lib.ui;
 
 import io.appium.java_client.AppiumDriver;
+import lib.Platform;
+import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 abstract public class SearchPageObject extends MainPageObject {
@@ -23,8 +25,11 @@ abstract public class SearchPageObject extends MainPageObject {
         return SEARCH_RESULT_BY_SUBSTRING_TPL.replace("{SUBSTRING}",substring);
     }
     private static String getResultSearchElement (String title, String description){
-
-        return SEARCH_RESULT_BY_TITLE_AND_DESCRIPTION_TPL.replace("{TITLE}",title).replace("{DESCRIPTION}",description);
+        return SEARCH_RESULT_BY_TITLE_AND_DESCRIPTION_TPL.replace("{TITLE}", title).replace("{DESCRIPTION}", description);
+    }
+    private static String getResultSearchElement (String search_string, String title, String description){
+        String new_title = StringUtils.remove(title, search_string);
+        return SEARCH_RESULT_BY_TITLE_AND_DESCRIPTION_TPL.replace("{TITLE}", search_string).replace("{SUBTITLE}", new_title).replace("{DESCRIPTION}", description);
     }
 
     public void initSearchInput (){
@@ -73,6 +78,13 @@ abstract public class SearchPageObject extends MainPageObject {
         this.waitForElementPresent(
                search_result_xpath,
                 "Cannot find search result with title: '" + title + "' and description: '" + description + "'.");
+
+    }
+    public void waitForElementByTitleAndDescription(String search_string, String title, String description){
+        String search_result_xpath = getResultSearchElement(search_string,title, description);
+        this.waitForElementPresent(
+                search_result_xpath,
+                "Cannot find search result '" + search_string + "' with title: '" + title + "' and description: '" + description + "'.");
 
     }
 }
