@@ -1,5 +1,7 @@
 package tests;
 
+import io.qameta.allure.*;
+import io.qameta.allure.junit4.DisplayName;
 import lib.Platform;
 import lib.ui.*;
 import lib.ui.factories.ArticlePageObjectFactory;
@@ -23,12 +25,17 @@ public class FirstTest extends CoreTestCase {
             login = "Daria.shine",
             password = "44162853";
 
-    protected void setUp() throws Exception{
+    public void setUp() throws Exception{
         super.setUp();
         mainPageObject = new MainPageObject(driver);
     }
 
     @Test
+    @Features(value = {@Feature(value = "Search")})
+    @DisplayName("Test search")
+    @Description("Test description")
+    @Step("Starting test testSearch")
+    @Severity(value = SeverityLevel.CRITICAL)
     public void testSearch(){
         SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
 
@@ -37,6 +44,11 @@ public class FirstTest extends CoreTestCase {
         searchPageObject.waitForSearchResult("Object-oriented programming language");
     }
     @Test
+    @Features(value = {@Feature(value = "Search"),@Feature(value = "Cancel")})
+    @DisplayName("Test Cancel search")
+    @Description("Test description")
+    @Step("Starting test testCancelSearch")
+    @Severity(value = SeverityLevel.NORMAL)
     public void testCancelSearch(){
         SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
 
@@ -47,37 +59,13 @@ public class FirstTest extends CoreTestCase {
 
     }
 
-    @Test
-    public void testCompareArticleTitle () throws InterruptedException{
-        SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
-        ArticlePageObject articlePageObject = ArticlePageObjectFactory.get(driver);
-
-        searchPageObject.initSearchInput();
-        searchPageObject.typeSearchLine("Java");
-        searchPageObject.clickByArticleWithSubstring("Object-oriented programming language");
-        Thread.sleep(5000);
-        String article_title = articlePageObject.getArticleTitle();
-
-        Assert.assertEquals(
-                "We see unexpected title",
-                "Java (programming language)",
-                article_title
-        );
-    }
-    @Test
-    public void testSwipeArticle() throws InterruptedException{
-        SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
-        ArticlePageObject articlePageObject = ArticlePageObjectFactory.get(driver);
-
-        searchPageObject.initSearchInput();
-        searchPageObject.typeSearchLine("Java");
-        searchPageObject.clickByArticleWithSubstring("Object-oriented programming language");
-        Thread.sleep(5000);
-        articlePageObject.waitForTitleElement();
-        articlePageObject.swipeToFooter();
-    }
 
     @Test
+    @Features(value = {@Feature(value = "Search")})
+    @DisplayName("Test Assert Element Has Text")
+    @Description("Test description")
+    @Step("Starting test testAssertElementHasText")
+    @Severity(value = SeverityLevel.CRITICAL)
     public void testAssertElementHasText() {
         mainPageObject.waitForElementAndClick(
                 "id:org.wikipedia:id/search_container",
@@ -93,6 +81,11 @@ public class FirstTest extends CoreTestCase {
 
     }
     @Test
+    @Features(value = {@Feature(value = "Search"),@Feature(value = "Cancel")})
+    @DisplayName("Test Cancel Search")
+    @Description("Test description")
+    @Step("Starting test testCancelSearchEx3")
+    @Severity(value = SeverityLevel.NORMAL)
     public void testCancelSearchEx3() {
         SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
         searchPageObject.initSearchInput();
@@ -108,6 +101,11 @@ public class FirstTest extends CoreTestCase {
     }
 
     @Test
+    @Features(value = {@Feature(value = "Search")})
+    @DisplayName("Test Assert WordsI n The Search Ex4")
+    @Description("Test description")
+    @Step("Starting test testAssertWordsInTheSearchEx4")
+    @Severity(value = SeverityLevel.CRITICAL)
     public void testAssertWordsInTheSearchEx4() {
         mainPageObject.waitForElementAndClick(
                 "id:org.wikipedia:id/search_container",
@@ -139,6 +137,11 @@ public class FirstTest extends CoreTestCase {
 
 
     @Test
+    @Features(value = {@Feature(value = "Article")})
+    @DisplayName("Test Save First Article To My List")
+    @Description("Test description")
+    @Step("Starting test testSaveFirstArticleToMyList")
+    @Severity(value = SeverityLevel.BLOCKER)
     public void testSaveFirstArticleToMyList(){
         SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
         ArticlePageObject articlePageObject = ArticlePageObjectFactory.get(driver);
@@ -171,7 +174,7 @@ public class FirstTest extends CoreTestCase {
             auth.submitForm();
 
             articlePageObject.waitForTitleElement();
-            assertEquals("We are not on the same page after login",
+            Assert.assertEquals("We are not on the same page after login",
                     article_title, articlePageObject.getArticleTitle());
             articlePageObject.addArticlesToMySaved();
             navigationUI.openNavigation();
@@ -181,6 +184,11 @@ public class FirstTest extends CoreTestCase {
         myListsPageObject.swipeByArticleToDelete(article_title);
     }
     @Test
+    @Features(value = {@Feature(value = "Search")})
+    @DisplayName("Test Amount Of Not Empty Search")
+    @Description("Test description")
+    @Step("Starting test testAmountOfNotEmptySearch")
+    @Severity(value = SeverityLevel.MINOR)
     public void testAmountOfNotEmptySearch(){
         SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
         String search_line = "Linkin park discography";
@@ -195,6 +203,11 @@ public class FirstTest extends CoreTestCase {
     }
 
     @Test
+    @Features(value = {@Feature(value = "Search")})
+    @DisplayName("Test Amount Of Empty Search")
+    @Description("Test description")
+    @Step("Starting test testAmountOfEmptySearch")
+    @Severity(value = SeverityLevel.BLOCKER)
     public void testAmountOfEmptySearch() {
         SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
         searchPageObject.initSearchInput();
@@ -203,7 +216,13 @@ public class FirstTest extends CoreTestCase {
         searchPageObject.waitForEmptyResultLabel();
         searchPageObject.assertThereIsNoResultOfSearch();
     }
+
     @Test
+    @Features(value = {@Feature(value = "Search"),@Feature(value = "Orientation")})
+    @DisplayName("Test Change Screen Orientation On Search Results")
+    @Description("Test description")
+    @Step("Starting test testChangeScreenOrientationOnSearchResults")
+    @Severity(value = SeverityLevel.CRITICAL)
     public void testChangeScreenOrientationOnSearchResults(){
         if(Platform.getInstance().isMW()) return;
 
@@ -232,6 +251,11 @@ public class FirstTest extends CoreTestCase {
     }
 
     @Test
+    @Features(value = {@Feature(value = "Article"),@Feature(value = "Background")})
+    @DisplayName("Test Check Screen Article Background")
+    @Description("Test description")
+    @Step("Starting test testCheckScreenArticleBackground")
+    @Severity(value = SeverityLevel.CRITICAL)
     public void testCheckScreenArticleBackground(){
         if(Platform.getInstance().isMW()) return;
 
@@ -245,6 +269,11 @@ public class FirstTest extends CoreTestCase {
     }
 
     @Test
+    @Features(value = {@Feature(value = "Article")})
+    @DisplayName("Test Save First Article To My List EX5")
+    @Description("Test description")
+    @Step("Starting test testSaveFirstArticleToMyListEX5")
+    @Severity(value = SeverityLevel.CRITICAL)
     public void testSaveFirstArticleToMyListEX5() {
         SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
         ArticlePageObject articlePageObject = ArticlePageObjectFactory.get(driver);
@@ -271,7 +300,7 @@ public class FirstTest extends CoreTestCase {
             auth.submitForm();
 
             articlePageObject.waitForTitleElement();
-            assertEquals("We are not on the same page after login",
+            Assert.assertEquals("We are not on the same page after login",
                     article_title, articlePageObject.getArticleTitle());
             articlePageObject.addArticlesToMySaved();
         }
@@ -298,6 +327,11 @@ public class FirstTest extends CoreTestCase {
     }
 
     @Test
+    @Features(value = {@Feature(value = "Search")})
+    @DisplayName("Test Assert Element Present EX6")
+    @Description("Test description")
+    @Step("Starting test testAssertElementPresentEX6")
+    @Severity(value = SeverityLevel.NORMAL)
     public void testAssertElementPresentEX6() {
         SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
         searchPageObject.initSearchInput();
@@ -307,6 +341,11 @@ public class FirstTest extends CoreTestCase {
     }
 
     @Test
+    @Features(value = {@Feature(value = "Search")})
+    @DisplayName("Test Assert Element Present")
+    @Description("Test description")
+    @Step("Starting test testAssertElementPresentEX9")
+    @Severity(value = SeverityLevel.NORMAL)
     public void testAssertElementPresentEX9() {
         String search_string = "Java";
         SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);

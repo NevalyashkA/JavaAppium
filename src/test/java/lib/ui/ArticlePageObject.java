@@ -1,5 +1,6 @@
 package lib.ui;
 
+import io.qameta.allure.Step;
 import lib.Platform;
 import org.openqa.selenium.WebElement;
 
@@ -26,10 +27,11 @@ abstract public class ArticlePageObject extends MainPageObject{
         super(driver);
     }
 
+    @Step("getListItemTitleElement")
     private static String getListItemTitleElement (String substring){
         return LIST_ITEM_TITLE_TPL.replace("{ITEM}",substring);
     }
-
+    @Step("waitForTitleElement")
     public WebElement waitForTitleElement(){
         return this.waitForElementPresent(
                 TITLE,
@@ -37,8 +39,10 @@ abstract public class ArticlePageObject extends MainPageObject{
                 15
         );
     }
+    @Step("getArticleTitle")
     public String getArticleTitle(){
         WebElement title_element = waitForTitleElement();
+        screenshot(this.takeScreenshot("article_title"));
         if(Platform.getInstance().isAndroid()) {
             return title_element.getAttribute("text");
         }else if(Platform.getInstance().isIOS()){
@@ -47,6 +51,7 @@ abstract public class ArticlePageObject extends MainPageObject{
             return title_element.getText();
         }
     }
+    @Step("swipeToFooter")
     public void swipeToFooter (){
         if(Platform.getInstance().isAndroid()) {
             this.swipeUpToElement(
@@ -67,6 +72,7 @@ abstract public class ArticlePageObject extends MainPageObject{
                     40);
         }
     }
+    @Step("addArticleToMyList")
     public void addArticleToMyList (String name_of_folder){
         waitForTitleElement();
         this.waitForElementPresent(
@@ -110,6 +116,7 @@ abstract public class ArticlePageObject extends MainPageObject{
                 5
         );
     }
+    @Step("addNextArticleToMyList")
     public void addNextArticleToMyList (String name_of_folder){
         waitForTitleElement();
         this.waitForElementPresent(
@@ -138,6 +145,7 @@ abstract public class ArticlePageObject extends MainPageObject{
         );
 
     }
+    @Step("addArticlesToMySaved")
     public void addArticlesToMySaved(){
         if(Platform.getInstance().isMW()){
             this.removeArticleFromSavedIfItAdded();
@@ -148,6 +156,7 @@ abstract public class ArticlePageObject extends MainPageObject{
                 5
         );
     }
+    @Step("removeArticleFromSavedIfItAdded")
     public void removeArticleFromSavedIfItAdded(){
         if(this.isElementPresent(OPTIONS_REMOVE_FROM_MY_LIST_BUTTON)){
             this.waitForElementAndClick(
@@ -161,6 +170,7 @@ abstract public class ArticlePageObject extends MainPageObject{
             );
         }
     }
+    @Step("closeArticle")
     public void closeArticle(){
         if(Platform.getInstance().isIOS() || Platform.getInstance().isAndroid()) {
             this.waitForElementAndClick(
